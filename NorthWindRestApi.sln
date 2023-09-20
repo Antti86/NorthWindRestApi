@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.7.34024.191
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NorthWindRestApi", "NorthWindRestApi.csproj", "{71709A62-14E8-41F7-A25A-FDE299352712}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{71709A62-14E8-41F7-A25A-FDE299352712}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{71709A62-14E8-41F7-A25A-FDE299352712}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{71709A62-14E8-41F7-A25A-FDE299352712}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{71709A62-14E8-41F7-A25A-FDE299352712}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {2AA3CB70-098A-4E48-8D02-98C1010177E5}
+	EndGlobalSection
+EndGlobal
