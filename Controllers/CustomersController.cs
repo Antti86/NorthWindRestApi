@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Conventions;
 using NorthWindRestApi.Models;
 
 namespace NorthWindRestApi.Controllers
@@ -93,93 +94,72 @@ namespace NorthWindRestApi.Controllers
             }
         }
 
-        //[HttpPost]
-        //public ActionResult AddNewCustomer([FromBody] Customer customer)
-        //{
-        //    try
-        //    {
-        //        db.Customers.Add(customer);
-        //        db.SaveChanges();
-        //        return Ok($"Added new Customer {customer.CompanyName}");
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        return BadRequest(ex.InnerException);
-        //    }
-        //}
 
-
-
-
-        //Poistaminen
 
         [HttpDelete("{id}")]
-        public ActionResult RemoveCustomer(string id)
+        public ActionResult RemoveCustomerAndItsOrders(string id, bool forceDelete = false)
+            //Huom Force delete poistaa asiakkaan kaikki tilaukset ja tilausrivit
         {
-            try
+            if (!forceDelete)
             {
-                var customer = db.Customers.Find(id);
-                if (customer is not null)
+                try
                 {
-                    db.Customers.Remove(customer);
-                    db.SaveChanges();
-                    return Ok($"Customer {customer.CustomerId} removed");
+                    var customer = db.Customers.Find(id);
+                    if (customer is not null)
+                    {
+                        db.Customers.Remove(customer);
+                        db.SaveChanges();
+                        return Ok($"Customer {customer.CustomerId} removed");
+                    }
+                    return NotFound("Customer was not found!");
+
                 }
-                return NotFound("Customer was not found!");
-
+                catch (Exception ex)
+                {
+                    return BadRequest(ex.InnerException);
+                }
             }
-            catch (Exception ex)
+            else
             {
-                return BadRequest(ex.InnerException);
+                try
+                {
+                    var customer = db.Customers.Find(id);
+                    if (customer is not null)
+                    {
+                        var orders = db.Orders.Where(x => x.CustomerId == id).ToList();
+                        if (orders.Count != 0)
+                        {
+                            var orderIds = orders.Select(order => order.OrderId).ToList();
+                            var rivit = db.OrderDetails.Where(x => orderIds.Contains(x.OrderId)).ToList();
+                            if (rivit.Count != 0)
+                            {
+                                foreach (var r in rivit)
+                                {
+                                    db.OrderDetails.Remove(r);
+                                }
+                                db.SaveChanges();
+                            }
+
+                            foreach (var i in orders)
+                            {
+                                db.Orders.Remove(i);
+                            }
+                            db.SaveChanges();
+                        }
+                        db.Customers.Remove(customer);
+                        db.SaveChanges();
+                        return Ok($"Customer {customer.CustomerId} removed");
+                    }
+                    return NotFound("Customer was not found!");
+
+                }
+                catch (Exception ex)
+                {
+                    return BadRequest(ex.InnerException);
+                }
             }
+ 
         }
-
-        //[HttpDelete("{id}")]
-        //public ActionResult RemoveCustomerAndItsOrders(string id)
-        //{
-        //    try
-        //    {
-        //        var customer = db.Customers.Find(id);
-        //        if (customer is not null)
-        //        {
-
-        //            var orders = db.Orders.Where(x => x.CustomerId == id).ToList();
-        //            if (orders is not null)
-        //            {
-        //                var details = db.OrderDetails.ToList();
-        //                var testi = orders[0].OrderId;
-        //                var rivit = db.OrderDetails.Where(x => x.OrderId == orders[0].OrderId).ToList();
-
-        //                if (rivit is not null)
-        //                {
-        //                    foreach (var r in rivit)
-        //                    {
-        //                        db.OrderDetails.Remove(r);
-        //                    }
-        //                }
-
-        //                db.SaveChanges();
-
-        //                foreach (var i in orders)
-        //                {
-        //                    db.Orders.Remove(i);
-        //                }
-        //                db.SaveChanges();
-
-        //            }
-
-        //            db.Customers.Remove(customer);
-        //            db.SaveChanges();
-        //            return Ok($"Customer {customer.CustomerId} removed");
-        //        }
-        //        return NotFound("Customer was not found!");
-
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        return BadRequest(ex.InnerException);
-        //    }
-        //}
 
 
         [HttpPut("{id}")]
