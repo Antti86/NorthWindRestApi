@@ -26,6 +26,5 @@ namespace NorthWindRestApi.Models
         public virtual ICollection<Order> Orders { get; set; }
 
         public virtual ICollection<CustomerDemographic> CustomerTypes { get; set; }
-
     }
 }

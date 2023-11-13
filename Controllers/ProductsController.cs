@@ -1,9 +1,12 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using NorthWindRestApi.Models;
 
 namespace NorthWindRestApi.Controllers
 {
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     [Route("api/[controller]")]
     [ApiController]
     public class ProductsController : ControllerBase
@@ -26,6 +29,20 @@ namespace NorthWindRestApi.Controllers
                 {
                     return NotFound("Product table is empty");
                 }
+
+                List<Category> cate = db.Categories.ToList();
+
+                foreach (var j in cate)
+                {
+                    j.Picture = null;
+                    j.Products.Clear();
+                }
+
+                foreach (var i in products)
+                {
+                    i.Category = cate.Find(x => x.CategoryId == i.CategoryId);
+                }
+
                 return Ok(products);
             }
             catch (Exception ex)
@@ -170,6 +187,7 @@ namespace NorthWindRestApi.Controllers
 
                 if (modiProduct is not null)
                 {
+
                     modiProduct.ProductName = product.ProductName;
                     modiProduct.SupplierId = product.SupplierId;
                     modiProduct.CategoryId = product.CategoryId;

@@ -44,14 +44,14 @@ namespace NorthWindRestApi.Models
         public virtual DbSet<Supplier> Suppliers { get; set; } = null!;
         public virtual DbSet<Territory> Territories { get; set; } = null!;
         public virtual DbSet<Tuotesummat> Tuotesummats { get; set; } = null!;
+        public virtual DbSet<User> Users { get; set; } = null!;
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-//            if (!optionsBuilder.IsConfigured)
-//            {
-//#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-//                optionsBuilder.UseSqlServer("Server=LAPTOP-G077TJ0R\\SQLEXPRESS;Database=NorthwindOriginal;Trusted_Connection=True;");
-//            }
+            if (!optionsBuilder.IsConfigured)
+            {
+
+            }
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -362,7 +362,9 @@ namespace NorthWindRestApi.Models
 
                 entity.Property(e => e.EmployeeId).HasColumnName("EmployeeID");
 
-                entity.Property(e => e.Freight).HasColumnType("money");
+                entity.Property(e => e.Freight)
+                    .HasColumnType("money")
+                    .HasDefaultValueSql("((0))");
 
                 entity.Property(e => e.OrderDate).HasColumnType("datetime");
 
@@ -420,6 +422,8 @@ namespace NorthWindRestApi.Models
                 entity.Property(e => e.OrderId).HasColumnName("OrderID");
 
                 entity.Property(e => e.ProductId).HasColumnName("ProductID");
+
+                entity.Property(e => e.Quantity).HasDefaultValueSql("((1))");
 
                 entity.Property(e => e.UnitPrice).HasColumnType("money");
 
@@ -539,9 +543,17 @@ namespace NorthWindRestApi.Models
 
                 entity.Property(e => e.QuantityPerUnit).HasMaxLength(20);
 
+                entity.Property(e => e.ReorderLevel).HasDefaultValueSql("((0))");
+
                 entity.Property(e => e.SupplierId).HasColumnName("SupplierID");
 
-                entity.Property(e => e.UnitPrice).HasColumnType("money");
+                entity.Property(e => e.UnitPrice)
+                    .HasColumnType("money")
+                    .HasDefaultValueSql("((0))");
+
+                entity.Property(e => e.UnitsInStock).HasDefaultValueSql("((0))");
+
+                entity.Property(e => e.UnitsOnOrder).HasDefaultValueSql("((0))");
 
                 entity.HasOne(d => d.Category)
                     .WithMany(p => p.Products)
@@ -761,6 +773,19 @@ namespace NorthWindRestApi.Models
                     .HasColumnName("ProductID");
 
                 entity.Property(e => e.Summa).HasColumnType("money");
+            });
+
+            modelBuilder.Entity<User>(entity =>
+            {
+                entity.Property(e => e.FirstName).HasMaxLength(50);
+
+                entity.Property(e => e.LastName).HasMaxLength(50);
+
+                entity.Property(e => e.Password).HasMaxLength(100);
+
+                entity.Property(e => e.Phone).HasMaxLength(20);
+
+                entity.Property(e => e.UserName).HasMaxLength(50);
             });
 
             OnModelCreatingPartial(modelBuilder);

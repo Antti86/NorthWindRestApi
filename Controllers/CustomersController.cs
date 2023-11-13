@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
@@ -7,6 +9,7 @@ using NorthWindRestApi.Models;
 
 namespace NorthWindRestApi.Controllers
 {
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     [Route("api/[controller]")]
     [ApiController]
     public class CustomersController : ControllerBase
@@ -86,7 +89,7 @@ namespace NorthWindRestApi.Controllers
             {
                 db.Customers.Add(customer);
                 db.SaveChanges();
-                return Ok($"Added new Customer {customer.CompanyName}");
+                return Ok($"Asiakas lisätty: {customer.CompanyName}");
             }
             catch (Exception ex)
             {
