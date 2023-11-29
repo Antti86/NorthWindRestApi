@@ -26,22 +26,6 @@ namespace NorthWindRestApi.Services
                 return null;
             }
 
-            //if (foundUser == null)
-            //{
-            //    var l = new LoggedUser();
-            //    l.Username = "Nolla";
-            //    l.AccesslevelId = 1;
-            //    l.Token = null;
-            //    return l;
-            //}
-            //if (!BCrypt.Net.BCrypt.Verify(password, foundUser.Password))
-            //{
-            //    var l = new LoggedUser();
-            //    l.Username = "Virhe";
-            //    l.AccesslevelId = 1;
-            //    l.Token = null;
-            //    return l;
-            //}
 
             // Jos käyttäjä löytyy:
             var tokenHandler = new JwtSecurityTokenHandler();

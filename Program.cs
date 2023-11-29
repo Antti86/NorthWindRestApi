@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
@@ -6,6 +7,7 @@ using Microsoft.IdentityModel.Tokens;
 using NorthWindRestApi.Models;
 using NorthWindRestApi.Services;
 using System.Configuration;
+using System.Net;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -18,7 +20,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 builder.Services.AddDbContext<NorthwindOriginalContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("Paikallinen")));
+    options.UseSqlServer(builder.Configuration.GetConnectionString("Azure")));
 
 var appSettingsSection = builder.Configuration.GetSection("AppSettings");
 builder.Services.Configure<AppSettings>(appSettingsSection);
@@ -45,6 +47,7 @@ builder.Services.AddAuthentication(au =>
 });
 
 builder.Services.AddScoped<IAuthenticateService, AuthenticateService>();
+
 
 builder.Services.AddCors(options =>
 {
